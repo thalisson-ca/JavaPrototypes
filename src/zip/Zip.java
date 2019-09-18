@@ -12,10 +12,16 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Class to help with zip files
+ * @author Thalisson Christano de Almeida
+ *
+ */
 public class Zip {
 
 	/**
 	 * Unzip a zip file to a directory and returns a list of files that was unzipped
+	 * @author Thalisson Christano de Almeida
 	 * @param pathZip Path to zip file
 	 * @param destPath Path to destination directory
 	 * @return a list of the unzipped files
