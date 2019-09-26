@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class SimpleString {
 	
 	/**
-	 * Split a string using a separator character
+	 * Split a string using a separator character, but won't split if the separator character is between quotes ("")
 	 * @param string String to be split
 	 * @param separator a character which will determine where to split. Exception if the separator is inside quotes, which will be ignored
 	 * @return a String array with the split strings
 	 */
-	public static String[] split(String string, char separator) {
+	public static String[] splitUnlessQuote(String string, char separator) {
 		String[] result;
 		if(string.contains("\"")){
 			ArrayList<String> response = new ArrayList<>();

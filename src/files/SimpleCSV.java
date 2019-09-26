@@ -10,6 +10,11 @@ import java.util.List;
 
 import string.SimpleString;
 
+/**
+ * Class to simplify the manipulation for CSV files
+ * @author Thalisson Christiano de Almeida
+ *
+ */
 public class SimpleCSV {
 	ArrayList<String[]> lines;
 	
@@ -31,7 +36,7 @@ public class SimpleCSV {
 			}
 			
 			while ((line = reader.readLine()) != null) {
-				String[] newLine = SimpleString.split(line,separator);
+				String[] newLine = SimpleString.splitUnlessQuote(line,separator);
 				lines.add(newLine);
 			}
 		}

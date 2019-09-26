@@ -2,9 +2,12 @@ package http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,57 +17,102 @@ import java.util.Map.Entry;
  *
  */
 public class SimpleHttpConnect {
-	public static final String ENCODING_UTF8 = "UTF-8";
-	
+
 	/**
-	 * Send a GET request
-	 * @param url URL to be requested
-	 * @param defaultResponseEncoding the default response encoding for the request. Must not be null.
-	 * @param headers A map for HTTP header parameters
-	 * @return a string with the body content
-	 * @throws IOException if a problem with connection has occurred
-	 * @throws HTTP401Exception if you get a HTTP 401 code
-	 * @throws HTTPUnknowException if you didn't get a OK response and it is not the exception above
+	 * Send a GET Request to receive a string
+	 * @param url url which request will be made
+	 * @param responseCharset the response charset
+	 * @param headers headers value to be send
+	 * @return a string response
+	 * @throws IOException
+	 * @throws HTTPException
 	 */
-	public static String sendGET(String url, String defaultResponseEncoding, Map<String, String> headers) throws IOException, HTTP401Exception, HTTPUnknowException {
-		return sendRequest(url, "GET", defaultResponseEncoding, headers);
+	public static String sendGETForString(String url, Charset responseCharset, Map<String, String> headers) throws IOException, HTTPException {
+		return sendRequestForString(url, "GET", responseCharset, headers,null);
 	}
 	
 	/**
-	 * Send a PUT request
-	 * @param url URL to be requested
-	 * @param defaultResponseEncoding the default response encoding for the request. Must not be null.
-	 * @param headers A map for HTTP header parameters
-	 * @return a string with the body content
-	 * @throws IOException if a problem with connection has occurred
-	 * @throws HTTP401Exception if you get a HTTP 401 code
-	 * @throws HTTPUnknowException if you didn't get a OK response and it is not the exception above
+	 * Send a PUT Request to receive a string
+	 * @param url url which request will be made
+	 * @param responseCharset the response charset
+	 * @param headers headers value to be send
+	 * @return a string response
+	 * @throws IOException
+	 * @throws HTTPException
 	 */
-	public static String sendPUT(String url, String defaultResponseEncoding, Map<String, String> headers) throws IOException, HTTP401Exception, HTTPUnknowException {
-		return sendRequest(url, "PUT", defaultResponseEncoding, headers);
+	public static String sendPUTForString(String url, Charset responseCharset, Map<String, String> headers) throws IOException, HTTPException {
+		return sendRequestForString(url, "PUT", responseCharset, headers,null);
 
 	}
+	
+	/**
+	 * Send a PUT request with JSON format string as the body
+	 * @param url url which request will be made
+	 * @param headers headers value to be send
+	 * @param json a string with JSON Format
+	 * @param jsonCharset the string charset
+	 * @return an String with the request response
+	 * @throws IOException
+	 * @throws HTTPException
+	 */
+	public static String sendPUTWithJSON(String url, Map<String, String> headers, String json, Charset jsonCharset) throws IOException, HTTPException {
+		if(headers==null) {
+			headers = new HashMap<String,String>();
+		}
+		headers.put("Content-Type", "application/json; "+jsonCharset);
+		return new String(sendRequest(url, "PUT", headers,json.getBytes(jsonCharset)));
+
+	}		
 
 	/**
-	 * Send a HTTP request
-	 * @param url URL to be requested
-	 * @param method the method request like GET, POST, PUT, etc
-	 * @param defaultResponseEncoding the default response encoding for the request. Must not be null.
-	 * @param headers A map for HTTP header parameters
-	 * @return a string with the body content
-	 * @throws IOException if a problem with connection has occurred
-	 * @throws HTTP401Exception if you get a HTTP 401 code
-	 * @throws HTTPUnknowException if you didn't get a OK response and it is not the exception above
+	 * Send a HTML request to receive a string as response
+	 * @param url url which request will be made
+	 * @param method request method (GET, POST, PUT, etc)
+	 * @param responseCharset the response charset
+	 * @param headers headers value to be send
+	 * @param body content to be send
+	 * @return a string format response
+	 * @throws IOException
+	 * @throws HTTPException
 	 */
-	public static String sendRequest(String url, String method, String defaultResponseEncoding, Map<String, String> headers) throws IOException, HTTP401Exception, HTTPUnknowException {
-		if(defaultResponseEncoding==null) {
-			throw new IllegalArgumentException("defaultResponseEncoding must not be null");
+	public static String sendRequestForString(String url, String method, Charset responseCharset, Map<String, String> headers, byte[] body) throws IOException, HTTPException {
+		if(responseCharset==null) {
+			throw new IllegalArgumentException("responseCharset must not be null");
 		}
 		
+		return new String(sendRequest(url,method,headers,body), responseCharset);
+		
+	}
+	
+	/**
+	 * Send a HTML request to receive a string as response
+	 * @param url url which request will be made
+	 * @param method request method (GET, POST, PUT, etc)
+	 * @param headers headers value to be send
+	 * @param body content to be send
+	 * @return a string format response
+	 * @throws IOException
+	 * @throws HTTPException
+	 */
+	public static String sendRequestForString(String url, String method, Map<String, String> headers, byte[] body) throws IOException, HTTPException {
+		return new String(sendRequest(url,method,headers,body));
+		
+	}
+	
+	/**
+	 * Send a HTML request
+	 * @param url url which request will be made
+	 * @param method request method (GET, POST, PUT, etc)
+	 * @param headers headers value to be send
+	 * @param body content to be send
+	 * @return a byte array with the response content body
+	 * @throws IOException
+	 * @throws HTTPException
+	 */
+	public static byte[] sendRequest(String url, String method, Map<String, String> headers, byte[] body) throws IOException, HTTPException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod(method);
-		
 		
 		if(headers!=null) {
 			for(Entry<String, String> entry: headers.entrySet()) {
@@ -72,15 +120,15 @@ public class SimpleHttpConnect {
 			}
 		}
 		
-		
-		int responseCode = con.getResponseCode();
-		String encoding = con.getContentEncoding();
-		if(encoding==null) {
-			encoding = defaultResponseEncoding;
+		if(body!=null) {
+			con.setDoOutput(true);
+			try(OutputStream os = con.getOutputStream()) {
+				os.write(body, 0, body.length);
+			}
 		}
 		
+		int responseCode = con.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) { 
-			
 			ByteBuffer response = ByteBuffer.allocate(con.getContentLength());
 			InputStream is = con.getInputStream();
 			int inputByte = -1;
@@ -88,31 +136,33 @@ public class SimpleHttpConnect {
 				response.put((byte) inputByte);
 			}
 			
-			return new String(response.array(), encoding);
-		} else if(responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
-			throw new HTTP401Exception("Acesso não autorizado para "+url, null);
-		}else {
-			throw new HTTPUnknowException("HTTP Response: "+responseCode,null);
+			return response.array();
+		} else {
+			switch(responseCode) {
+				case HttpURLConnection.HTTP_UNAUTHORIZED:
+					throw new HTTPException("Acesso não autorizado para "+url, null);
+			
+				default:
+					throw new HTTPException("HTTP Response: "+responseCode+" para "+url,null);
+
+			}
+			
 		}
+
 	}
 	
-	public static class HTTP401Exception extends Exception{
-
-		private static final long serialVersionUID = 2345205184424849791L;
-
-		public HTTP401Exception(String message, Throwable cause) {
-			super(message, cause);
-		}
-	}
-	
-	public static class HTTPUnknowException extends Exception{
+	/**
+	 * Exception class for HTML response which is not ok
+	 * @author Thalisson Christano de Almeida
+	 *
+	 */
+	public static class HTTPException extends Exception{
 
 		private static final long serialVersionUID = -2904895002897967785L;
 
-		public HTTPUnknowException(String message, Throwable cause) {
+		public HTTPException(String message, Throwable cause) {
 			super(message, cause);
 		}
 	}
-	
 		
 }
