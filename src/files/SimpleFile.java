@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Class with common file manipulation
@@ -70,7 +71,11 @@ public class SimpleFile {
 	 * @throws IOException if it has problems with the file reading
 	 */
 	public static String getTextFileFromResource(String resource, String encoding) throws IOException{
-		return new String(getFileBytesFromResource(resource),encoding);
+		if(encoding==null) {
+			return new String(getFileBytesFromResource(resource));
+		}else {
+			return new String(getFileBytesFromResource(resource),encoding);
+		}
 	}
 	
 	/**
@@ -81,6 +86,44 @@ public class SimpleFile {
 	 */
 	public static String getTextFileFromResource(String resource) throws IOException{
 		return new String(getFileBytesFromResource(resource));
+		
+	}
+	
+	/**
+	 * Write a text into a file
+	 * @param path  path the file path 
+	 * @param fileData a string to be written
+	 * @param encoding the file encoding
+	 * @return a file reference
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 */
+	public static File writeTextFileWithString(String path,String fileData, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+		if(encoding==null) {
+			return writeToFileWithByteArray(path,fileData.getBytes());
+		}else {
+			return writeToFileWithByteArray(path,fileData.getBytes(encoding));
+		}
+		
+	}
+	
+	/**
+	 * Write a text into a file
+	 * @param file  a file object 
+	 * @param fileData a string to be written
+	 * @param encoding the file encoding
+	 * @return a file reference
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 */
+	public static File writeTextFileWithString(File file,String fileData, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+		if(encoding==null) {
+			return writeToFileWithByteArray(file,fileData.getBytes());
+		}else {
+			return writeToFileWithByteArray(file,fileData.getBytes(encoding));
+		}
 		
 	}
 		
