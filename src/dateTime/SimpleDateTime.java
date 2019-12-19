@@ -6,6 +6,11 @@ import java.util.GregorianCalendar;
 public class SimpleDateTime {
 	
 	public static GregorianCalendar[] getLastMonthlyTimePeriodWithReferenceDay(int firstDay, GregorianCalendar referenceDay) {
+		if(firstDay<1 || firstDay>28) {
+			throw new IllegalArgumentException();
+		}
+		
+		
 		GregorianCalendar[] period = new GregorianCalendar[2];
 		
 		period[1] = new GregorianCalendar(referenceDay.get(Calendar.YEAR), 
