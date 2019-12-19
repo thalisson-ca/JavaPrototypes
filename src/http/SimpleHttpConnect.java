@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class SimpleHttpConnect {
 	 * @throws IOException
 	 * @throws HTTPException
 	 */
-	public static byte[] sendRequest(String url, String method, Map<String, String> headers, byte[] body) throws IOException, HTTPException {
+	public static byte[] sendRequest(String url, String method, Map<String, String> headers, byte[] body) throws UnknownHostException,IOException, HTTPException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod(method);
@@ -141,7 +142,6 @@ public class SimpleHttpConnect {
 			switch(responseCode) {
 				case HttpURLConnection.HTTP_UNAUTHORIZED:
 					throw new HTTPException("Acesso não autorizado para "+url, null);
-			
 				default:
 					throw new HTTPException("HTTP Response: "+responseCode+" para "+url,null);
 
