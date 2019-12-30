@@ -1,4 +1,4 @@
-package http;
+package http.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
+import http.SimpleHttpConnect;
 import http.SimpleHttpConnect.HTTPException;
 
 class SimpleHttpConnectTest {

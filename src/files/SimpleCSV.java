@@ -23,10 +23,23 @@ public class SimpleCSV {
 		
 	}
 	
+	/**
+	 * Get the CSV content
+	 * @return a list of String array. Each entry of the list is a row from the file and each entry inside the array are the columns
+	 */
 	public List<String[]> get(){
 		return lines;
 	}
 	
+	/**
+	 * Method to read the CSV File
+	 * @param csvFile a file object to the CSV File
+	 * @param separator the separator character used in the CSV file
+	 * @param ignoreFirstLine if you must ignore the first line of the file (headers per example)
+	 * @return a list of String array. Each entry of the list is a row from the file and each entry inside the array are the columns
+	 * @throws FileNotFoundException if the file was not found
+	 * @throws IOException if there is an IO error.
+	 */
 	public List<String[]> readFile(File csvFile, char separator, boolean ignoreFirstLine) throws FileNotFoundException, IOException{
 		lines = new ArrayList<String[]>();
 		try(BufferedReader reader = new BufferedReader(new FileReader(csvFile))){

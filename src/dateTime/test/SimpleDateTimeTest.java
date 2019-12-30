@@ -23,18 +23,35 @@ class SimpleDateTimeTest {
 		
 		
 		referenceDay = new GregorianCalendar(2010,10,5);
-		expected[0] = new GregorianCalendar(2010,8,10);
-		expected[1] = new GregorianCalendar(2010,9,9,23,59,59);
+		expected[0] = new GregorianCalendar(2010,8,1);
+		expected[1] = new GregorianCalendar(2010,9,31,23,59,59);
 		expected[1].set(Calendar.MILLISECOND, 999);
-		actual = SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(10, referenceDay);
+		actual = SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(1, referenceDay);
 		assertArrayEquals(expected, actual);
 		
-		referenceDay = new GregorianCalendar(2010,10,15);
-		expected[0] = new GregorianCalendar(2010,9,10);
-		expected[1] = new GregorianCalendar(2010,10,9,23,59,59);
+		expected[0] = new GregorianCalendar(2010,8,28);
+		expected[1] = new GregorianCalendar(2010,9,27,23,59,59);
 		expected[1].set(Calendar.MILLISECOND, 999);
-		actual = SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(10, referenceDay);
+		actual = SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(28, referenceDay);
 		assertArrayEquals(expected, actual);
+		
+		try {
+			SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(0, referenceDay);
+			fail("Should throw Illegal Argument Exception");
+		}catch(IllegalArgumentException e) {
+			System.out.println("firstDay = 0 passed");
+		}catch(Exception e) {
+			fail("Should throw Illegal Argument Exception");
+		}
+		
+		try {
+			SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(29, referenceDay);
+			fail("Should throw Illegal Argument Exception");
+		}catch(IllegalArgumentException e) {
+			System.out.println("firstDay = 29 passed");
+		}catch(Exception e) {
+			fail("Should throw Illegal Argument Exception");
+		}
 	}
 
 }
