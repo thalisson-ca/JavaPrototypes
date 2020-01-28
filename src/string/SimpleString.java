@@ -1,6 +1,7 @@
 package string;
 
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 /**
  * Class with commons String manipulations
@@ -8,6 +9,21 @@ import java.util.ArrayList;
  *
  */
 public class SimpleString {
+	/**
+	 * Join each array element into a single array
+	 * @param array a string array to join
+	 * @param separator a string which will separate each string to be joined
+	 * @return a string with each element joined
+	 */
+	public static String join(String[] array, String separator) {
+		
+		StringJoiner stringJoiner = new StringJoiner(separator);
+		for(String string:array) {
+			stringJoiner.add(string);
+		}
+		
+		return stringJoiner.toString();
+	}
 	
 	/**
 	 * Split a string using a separator character, but won't split if the separator character is between quotes ("")
