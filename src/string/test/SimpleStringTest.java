@@ -2,13 +2,8 @@ package string.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import org.junit.jupiter.api.Test;
 
-import dateTime.SimpleDateTime;
-import string.Numbers;
 import string.SimpleString;
 
 class SimpleStringTest {
@@ -16,6 +11,20 @@ class SimpleStringTest {
 	@Test
 	void test() {
 		toCamelCase();
+		stripAccents();
+		removeSpecialCharacteres();
+	}
+	
+	
+	private void removeSpecialCharacteres() {
+		
+		assertEquals("Naoseioqueestafalando1111", SimpleString.removeNotAlphanumericCharactersAndStripAccentsAndSpaces("N„o sei o que est· falando 1111!!!."));
+	}
+	
+	private void stripAccents() {
+		assertEquals("NAO", SimpleString.stripAccents("N√O"));
+		assertEquals("cAO", SimpleString.stripAccents("Á√O"));
+		
 	}
 	
 	private void toCamelCase() {

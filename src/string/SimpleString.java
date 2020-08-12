@@ -1,5 +1,6 @@
 package string;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 
@@ -62,22 +63,72 @@ public class SimpleString {
 		return result;
 	}
 
-	public static String toCamelCase(final String init) {
-		if (init == null)
+	/**
+	 * Transform a string to Camel Case. e.g. "green apple" to "Green Apple"
+	 * @param string a string to be transformed into Camel Case
+	 * @return a string in Camel Case format
+	 */
+	public static String toCamelCase(final String string) {
+		if (string == null)
 			return null;
 
-		final StringBuilder ret = new StringBuilder(init.length());
+		final StringBuilder ret = new StringBuilder(string.length());
 
-		for (final String word : init.split(" ")) {
+		for (final String word : string.split(" ")) {
 			if (!word.isEmpty()) {
 				ret.append(Character.toUpperCase(word.charAt(0)));
 				ret.append(word.substring(1).toLowerCase());
 			}
-			if (!(ret.length() == init.length()))
+			if (!(ret.length() == string.length()))
 				ret.append(" ");
 		}
 
 		return ret.toString();
+	}
+	
+	/**
+	 * Remove accents from characters. i.g. "Hélicoptère" to "Helicoptere"
+	 * @param string a string
+	 * @return the same string without accents
+	 */
+	public static String stripAccents(final String string) {
+		if(string==null) 
+			return null;
+					
+		char[] out = new char[string.length()];
+		String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
+		 int j = 0;
+		    for (int i = 0, n = normalizedString.length(); i < n; ++i) {
+		        char c = normalizedString.charAt(i);
+		        if (c <= '\u007F') out[j++] = c;
+		    }
+		return (new String(out)).trim();
+		
+	}
+	
+	
+	/**
+	 * Remove accents from characters and non-alphanumerics characters (including spaces)
+	 * @param string a string
+	 * @return the same string without accents and without special characters, including spaces
+	 */
+	public static String removeNotAlphanumericCharactersAndStripAccentsAndSpaces(final String string) {
+		if(string==null) 
+			return null;
+		
+		char[] out = new char[string.length()];
+		String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
+		 int j = 0;
+		    for (int i = 0, n = normalizedString.length(); i < n; ++i) {
+		        char c = normalizedString.charAt(i);
+		        if ((c >= '\u0030' && c <= '\u0039')
+		        		|| (c >= '\u0041' && c <= '\u005A')
+		        		|| (c >= '\u0061' && c <= '\u007A')) { 
+		        	out[j++] = c;
+		        }
+		    }
+		return new String(out).trim();
+		
 	}
 
 }
