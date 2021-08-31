@@ -14,6 +14,48 @@ class SimpleDateTimeTest {
 	@Test
 	void test() {
 		getLastMonthlyTimePeriodWithReferenceDay();
+		calculateMonthDifference();
+	}
+	
+	
+	private void calculateMonthDifference() {
+		GregorianCalendar start;
+		GregorianCalendar end;
+		
+		start = new GregorianCalendar(2010,10,5);
+		end = new GregorianCalendar(2010,11,5);
+		assertEquals(1, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2010,11,4);
+		assertEquals(0, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2010,11,6);
+		assertEquals(1, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2010,10,5);
+		assertEquals(0, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2010,10,6);
+		assertEquals(0, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2010,10,4);
+		assertEquals(0, SimpleDateTime.calculateMonthDifference(start, end));
+				
+		end = new GregorianCalendar(2011,10,5);
+		assertEquals(12, SimpleDateTime.calculateMonthDifference(start, end));
+
+		end = new GregorianCalendar(2011,11,5);
+		assertEquals(13, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2011,11,4);
+		assertEquals(12, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2011,11,6);
+		assertEquals(13, SimpleDateTime.calculateMonthDifference(start, end));
+		
+		end = new GregorianCalendar(2009,10,4);
+		assertEquals(12, SimpleDateTime.calculateMonthDifference(start, end));
+
 	}
 	
 	private void getLastMonthlyTimePeriodWithReferenceDay() {
@@ -39,7 +81,7 @@ class SimpleDateTimeTest {
 			SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(0, referenceDay);
 			fail("Should throw Illegal Argument Exception");
 		}catch(IllegalArgumentException e) {
-			System.out.println("firstDay = 0 passed");
+			System.out.println("getLastMonthlyTimePeriodWithReferenceDay: firstDay = 0 passed");
 		}catch(Exception e) {
 			fail("Should throw Illegal Argument Exception");
 		}
@@ -48,7 +90,7 @@ class SimpleDateTimeTest {
 			SimpleDateTime.getLastMonthlyTimePeriodWithReferenceDay(29, referenceDay);
 			fail("Should throw Illegal Argument Exception");
 		}catch(IllegalArgumentException e) {
-			System.out.println("firstDay = 29 passed");
+			System.out.println("getLastMonthlyTimePeriodWithReferenceDay: firstDay = 29 passed");
 		}catch(Exception e) {
 			fail("Should throw Illegal Argument Exception");
 		}

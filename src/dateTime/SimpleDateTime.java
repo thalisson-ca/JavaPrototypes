@@ -12,6 +12,37 @@ public class SimpleDateTime {
 	
 	
 	/**
+	 * Calculate how many months there are between two Gregorian Calendar.
+	 * @param first a gregorian calendar with the start period.
+	 * @param last another gregorian calendar with the end period. 
+	 * @return the quantity of months between two dates.
+	 */
+	public static int calculateMonthDifference(GregorianCalendar first, GregorianCalendar last) {
+		if(last.before(first)) {
+			GregorianCalendar aux = first;
+			first = last;
+			last = aux;
+			
+		}
+		
+		int yearDif = last.get(Calendar.YEAR)-first.get(Calendar.YEAR);
+		int monthDif = last.get(Calendar.MONTH)-first.get(Calendar.MONTH);
+		int dayDif = last.get(Calendar.DAY_OF_MONTH)-first.get(Calendar.DAY_OF_MONTH);
+		
+		if(monthDif<0) {
+			yearDif--;
+			monthDif+=12;
+		}
+		if(dayDif<0) {
+			monthDif--;
+		}
+		
+		
+		return yearDif*12+monthDif;
+	}
+	
+	
+	/**
 	 * Given the first day of a monthly period, get the last 1 month period in relation of the reference day
 	 * @param firstDay day of the month to be the first day of the period. Must be a number between 1 and 28
 	 * @param referenceDay the day to be the reference to calculate the last period
